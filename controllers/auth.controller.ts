@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 let refreshTokens: string[] = [];
 
@@ -15,23 +15,19 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Cannot find user" });
   }
 
-  try {
-    const match = await bcrypt.compare(req.body.password, user.password);
-    if (!match) {
-      return res.status(401).json({ error: "Wrong password" });
-    }
-
-    const payload = { name: user.username };
-    const accessToken = generateAccessToken(payload);
-    const refreshToken = jwt.sign(
-      payload,
-      process.env.REFRESH_JWT_SECRET as string,
-    );
-    refreshTokens.push(refreshToken);
-    res.json({ accessToken: accessToken, refreshToken: refreshToken });
-  } catch (err) {
-    res.status(500).json({ error: err });
+  const match = await bcrypt.compare(req.body.password, user.password);
+  if (!match) {
+    return res.status(401).json({ error: "Wrong password" });
   }
+
+  const payload = { name: user.username };
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = jwt.sign(
+    payload,
+    process.env.REFRESH_JWT_SECRET as string,
+  );
+  refreshTokens.push(refreshToken);
+  res.json({ accessToken: accessToken, refreshToken: refreshToken });
 };
 
 export const refreshToken = (req: Request, res: Response) => {

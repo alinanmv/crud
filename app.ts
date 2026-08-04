@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import productRoutes from "./routes/product.route";
 import authRoutes from "./routes/auth.route";
 import { authenticateToken } from "./middleware/auth.middleware";
+import { errorHandler } from "./middleware/error.middleware";
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.use("/api/products", authenticateToken, productRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
+
+app.use(errorHandler);
 
 app.listen(3000, () => {
   console.log(`App listening on port 3000`);

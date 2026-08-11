@@ -1,9 +1,10 @@
 import { Schema, model, Document } from "mongoose";
-import { IProduct } from "./product.model";
+import { UserRole } from "../types";
 
 export interface IUser extends Document {
   username: string;
   password: string;
+  role: UserRole;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -18,6 +19,11 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, "Please enter a password"],
   },
+  role:{
+    type: String,
+    enum: ["admin", "user"],
+    default: "user",
+  }
 });
 
 const User = model<IUser>("User", userSchema);

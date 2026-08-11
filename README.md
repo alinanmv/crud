@@ -55,14 +55,14 @@ Client ──▶ Express Router ──▶ Auth Middleware ──▶ Controller �
 
 ## Tech Stack
 
-| Layer        | Technology                              |
-| ------------ | --------------------------------------- |
-| Language     | TypeScript                              |
-| Runtime      | Node.js ([tsx](https://github.com/privatenumber/tsx)) |
-| Framework    | Express 5                               |
-| Database     | MongoDB + Mongoose                      |
-| Auth         | jsonwebtoken, bcrypt                    |
-| Tooling      | Prettier, Zod                           |
+| Layer     | Technology                                            |
+| --------- | ----------------------------------------------------- |
+| Language  | TypeScript                                            |
+| Runtime   | Node.js ([tsx](https://github.com/privatenumber/tsx)) |
+| Framework | Express 5                                             |
+| Database  | MongoDB + Mongoose                                    |
+| Auth      | jsonwebtoken, bcrypt                                  |
+| Tooling   | Prettier, Zod                                         |
 
 ## Getting Started
 
@@ -88,11 +88,11 @@ cp .env.example .env
 cp atlas-credentials.env.example atlas-credentials.env
 ```
 
-| File                     | Variable             | Description                                   |
-| ------------------------ | -------------------- | --------------------------------------------- |
-| `atlas-credentials.env`  | `MONGODB_URI`        | MongoDB connection string                     |
-| `.env`                   | `JWT_SECRET`         | Secret for signing access tokens              |
-| `.env`                   | `REFRESH_JWT_SECRET` | Secret for signing refresh tokens             |
+| File                    | Variable             | Description                       |
+| ----------------------- | -------------------- | --------------------------------- |
+| `atlas-credentials.env` | `MONGODB_URI`        | MongoDB connection string         |
+| `.env`                  | `JWT_SECRET`         | Secret for signing access tokens  |
+| `.env`                  | `REFRESH_JWT_SECRET` | Secret for signing refresh tokens |
 
 ### Run
 
@@ -107,12 +107,12 @@ The API is served at **http://localhost:3000**.
 
 ### Authentication — `/api`
 
-| Method   | Endpoint        | Description                                 | Auth |
-| -------- | --------------- | ------------------------------------------- | :--: |
-| `POST`   | `/api/register` | Register a new user                         |  —   |
-| `POST`   | `/api/login`    | Authenticate, returns access + refresh JWTs |  —   |
-| `POST`   | `/api/token`    | Exchange a refresh token for a new access token | — |
-| `DELETE` | `/api/logout`   | Invalidate a refresh token                  |  —   |
+| Method   | Endpoint        | Description                                     | Auth |
+| -------- | --------------- | ----------------------------------------------- | :--: |
+| `POST`   | `/api/register` | Register a new user                             |  —   |
+| `POST`   | `/api/login`    | Authenticate, returns access + refresh JWTs     |  —   |
+| `POST`   | `/api/token`    | Exchange a refresh token for a new access token |  —   |
+| `DELETE` | `/api/logout`   | Invalidate a refresh token                      |  —   |
 
 <details>
 <summary><strong>Example — Register & Login</strong></summary>
@@ -144,13 +144,13 @@ Response:
 
 > All product endpoints require an `Authorization: Bearer <accessToken>` header and operate only on the authenticated user's products.
 
-| Method   | Endpoint            | Description          |
-| -------- | ------------------- | -------------------- |
-| `GET`    | `/api/products`     | List your products   |
-| `GET`    | `/api/products/:id` | Fetch a product      |
-| `POST`   | `/api/products`     | Create a product     |
-| `PUT`    | `/api/products/:id` | Update a product     |
-| `DELETE` | `/api/products/:id` | Delete a product     |
+| Method   | Endpoint            | Description        |
+| -------- | ------------------- | ------------------ |
+| `GET`    | `/api/products`     | List your products |
+| `GET`    | `/api/products/:id` | Fetch a product    |
+| `POST`   | `/api/products`     | Create a product   |
+| `PUT`    | `/api/products/:id` | Update a product   |
+| `DELETE` | `/api/products/:id` | Delete a product   |
 
 <details>
 <summary><strong>Example — Create a product</strong></summary>
@@ -162,13 +162,13 @@ curl -X POST http://localhost:3000/api/products \
   -d '{"name": "Widget", "quantity": 10, "price": 9.99}'
 ```
 
-| Field      | Type   | Required | Notes                          |
-| ---------- | ------ | :------: | ------------------------------ |
-| `name`     | string |    ✅     |                                |
-| `quantity` | number |    ✅     | defaults to `0`                |
-| `price`    | number |    ✅     | defaults to `0`                |
-| `image`    | string |    —     | optional                       |
-| `username` | string |   auto   | derived from the access token  |
+| Field      | Type   | Required | Notes                         |
+| ---------- | ------ | :------: | ----------------------------- |
+| `name`     | string |    ✅    |                               |
+| `quantity` | number |    ✅    | defaults to `0`               |
+| `price`    | number |    ✅    | defaults to `0`               |
+| `image`    | string |    —     | optional                      |
+| `username` | string |   auto   | derived from the access token |
 
 </details>
 
@@ -176,14 +176,14 @@ curl -X POST http://localhost:3000/api/products \
 
 Errors are returned as JSON with an appropriate HTTP status code:
 
-| Status | Condition                        |
-| ------ | -------------------------------- |
-| `400`  | Mongoose validation error        |
-| `401`  | Missing token / wrong password   |
-| `403`  | Invalid or expired token         |
-| `404`  | Resource not found               |
-| `409`  | Duplicate key (e.g. username)    |
-| `500`  | Unhandled server error           |
+| Status | Condition                      |
+| ------ | ------------------------------ |
+| `400`  | Mongoose validation error      |
+| `401`  | Missing token / wrong password |
+| `403`  | Invalid or expired token       |
+| `404`  | Resource not found             |
+| `409`  | Duplicate key (e.g. username)  |
+| `500`  | Unhandled server error         |
 
 ## Roadmap
 

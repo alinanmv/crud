@@ -5,8 +5,14 @@ import bcrypt from "bcrypt";
 
 let refreshTokens: string[] = [];
 
-function generateAccessToken(user: object) {
-  return jwt.sign(user, process.env.JWT_SECRET as string, { expiresIn: "5m" });
+interface TokenPayload {
+  id: string;
+  username: string;
+  role: string;
+}
+
+function generateAccessToken(payload: TokenPayload) {
+  return jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: "5m" });
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -20,27 +26,36 @@ export const login = async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Wrong password" });
   }
 
-  const payload = { name: user.username };
+  const payload: TokenPayload = {
+    id: user._id.toString(),
+    username: user.username,
+    role: user.role,
+  };
+
   const accessToken = generateAccessToken(payload);
-  const refreshToken = jwt.sign(
-    payload,
-    process.env.REFRESH_JWT_SECRET as string,
-  );
+  const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET as string);
   refreshTokens.push(refreshToken);
-  res.json({ accessToken: accessToken, refreshToken: refreshToken });
+
+  res.json({ accessToken, refreshToken });
 };
 
 export const refreshToken = (req: Request, res: Response) => {
   const token = req.body.token;
   if (token == null) return res.sendStatus(401);
   if (!refreshTokens.includes(token)) return res.sendStatus(403);
+
   jwt.verify(
     token,
     process.env.REFRESH_JWT_SECRET as string,
-    (err: any, user: any) => {
+    (err: jwt.VerifyErrors | null, decoded: unknown) => {
       if (err) return res.sendStatus(403);
-      const accessToken = generateAccessToken({ name: user.name });
-      res.json({ accessToken: accessToken });
+      const user = decoded as TokenPayload;
+      const accessToken = generateAccessToken({
+        id: user.id,
+        username: user.username,
+        role: user.role,
+      });
+      res.json({ accessToken });
     },
   );
 };

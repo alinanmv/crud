@@ -1,16 +1,20 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthRequest } from "../types";
 import Product from "../models/product.model";
 
-export const getProducts = async (req: Request, res: Response) => {
-  const username = (req as any).user.name;
-  const products = await Product.find({ username });
+export const getProducts = async (req: AuthRequest, res: Response) => {
+  const filter = req.user!.role === "admin" ? {} : { owner: req.user!.id };
+  const products = await Product.find(filter);
   res.status(200).json(products);
 };
 
-export const getProduct = async (req: Request, res: Response) => {
+export const getProduct = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const username = (req as any).user.name;
-  const product = await Product.findOne({ _id: id, username });
+  const filter =
+    req.user!.role === "admin"
+      ? { _id: id }
+      : { _id: id, owner: req.user!.id };
+  const product = await Product.findOne(filter);
 
   if (!product) {
     return res.status(404).json({ error: "Product not found" });
@@ -19,23 +23,21 @@ export const getProduct = async (req: Request, res: Response) => {
   res.status(200).json(product);
 };
 
-export const addProduct = async (req: Request, res: Response) => {
-  const username = (req as any).user.name;
-  const product = await Product.create({ ...req.body, username });
+export const addProduct = async (req: AuthRequest, res: Response) => {
+  const product = await Product.create({
+    ...req.body,
+    owner: req.user!.id,
+    username: req.user!.username,
+  });
   res.status(201).json(product);
 };
 
-export const updateProduct = async (req: Request, res: Response) => {
+export const updateProduct = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const username = (req as any).user.name;
-  const product = await Product.findOneAndUpdate(
-    { _id: id, username },
-    req.body,
-    {
-      new: true,
-      runValidators: true,
-    },
-  );
+  const product = await Product.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
   if (!product) {
     return res.status(404).json({ error: "Product not found" });
@@ -44,10 +46,9 @@ export const updateProduct = async (req: Request, res: Response) => {
   res.status(200).json(product);
 };
 
-export const deleteProduct = async (req: Request, res: Response) => {
+export const deleteProduct = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const username = (req as any).user.name;
-  const product = await Product.findOneAndDelete({ _id: id, username });
+  const product = await Product.findByIdAndDelete(id);
 
   if (!product) {
     return res.status(404).json({ error: "Product not found" });

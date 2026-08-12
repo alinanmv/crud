@@ -3,18 +3,33 @@ import * as product from "../controllers/product.controller";
 import { asyncHandler } from "../middleware/error.middleware";
 import { authenticateToken } from "../middleware/auth.middleware";
 import { checkOwnership } from "../middleware/owner.middleware";
+import { requirePermission } from "../middleware/permission.middleware";
 
 const router = express.Router();
 
-router.get("/", asyncHandler(product.getProducts));
+router.get(
+  "/",
+  requirePermission(["products:read", "products:all"]),
+  asyncHandler(product.getProducts),
+);
 
-router.get("/:id", asyncHandler(product.getProduct));
+router.get(
+  "/:id",
+  requirePermission(["products:read", "products:all"]),
+  asyncHandler(product.getProduct),
+);
 
-router.post("/", authenticateToken, asyncHandler(product.addProduct));
+router.post(
+  "/",
+  authenticateToken,
+  requirePermission(["products:create", "products:all"]),
+  asyncHandler(product.addProduct),
+);
 
 router.put(
   "/:id",
   authenticateToken,
+  requirePermission(["products:update", "products:all"]),
   asyncHandler(checkOwnership),
   asyncHandler(product.updateProduct),
 );
@@ -22,6 +37,7 @@ router.put(
 router.delete(
   "/:id",
   authenticateToken,
+  requirePermission(["products:delete", "products:all"]),
   asyncHandler(checkOwnership),
   asyncHandler(product.deleteProduct),
 );

@@ -1,19 +1,24 @@
 import { Response } from "express";
+import { QueryFilter } from "mongoose";
 import { AuthRequest } from "../types";
-import Product from "../models/product.model";
+import Product, { IProduct } from "../models/product.model";
+import { isAdmin } from "../constants/roles";
 
 export const getProducts = async (req: AuthRequest, res: Response) => {
-  const filter = req.user!.role === "admin" ? {} : { owner: req.user!.id };
+  const filter: QueryFilter<IProduct> = {};
+  if (!isAdmin(req.user!.role_id)) {
+    filter.owner = req.user!.id;
+  }
   const products = await Product.find(filter);
   res.status(200).json(products);
 };
 
 export const getProduct = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const filter =
-    req.user!.role === "admin"
-      ? { _id: id }
-      : { _id: id, owner: req.user!.id };
+  const filter: QueryFilter<IProduct> = { _id: id };
+  if (!isAdmin(req.user!.role_id)) {
+    filter.owner = req.user!.id;
+  }
   const product = await Product.findOne(filter);
 
   if (!product) {

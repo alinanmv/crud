@@ -5,7 +5,7 @@ export type UserRole = "admin" | "user";
 export interface JwtPayload {
   id: string;
   username: string;
-  role: UserRole;
+  role_id: number;
 }
 
 export interface AuthRequest extends Request {

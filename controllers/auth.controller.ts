@@ -8,11 +8,13 @@ let refreshTokens: string[] = [];
 interface TokenPayload {
   id: string;
   username: string;
-  role: string;
+  role_id: number;
 }
 
 function generateAccessToken(payload: TokenPayload) {
-  return jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: "5m" });
+  return jwt.sign(payload, process.env.JWT_SECRET as string, {
+    expiresIn: "5m",
+  });
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -29,11 +31,14 @@ export const login = async (req: Request, res: Response) => {
   const payload: TokenPayload = {
     id: user._id.toString(),
     username: user.username,
-    role: user.role,
+    role_id: user.role_id,
   };
 
   const accessToken = generateAccessToken(payload);
-  const refreshToken = jwt.sign(payload, process.env.REFRESH_JWT_SECRET as string);
+  const refreshToken = jwt.sign(
+    payload,
+    process.env.REFRESH_JWT_SECRET as string,
+  );
   refreshTokens.push(refreshToken);
 
   res.json({ accessToken, refreshToken });
@@ -53,7 +58,7 @@ export const refreshToken = (req: Request, res: Response) => {
       const accessToken = generateAccessToken({
         id: user.id,
         username: user.username,
-        role: user.role,
+        role_id: user.role_id,
       });
       res.json({ accessToken });
     },

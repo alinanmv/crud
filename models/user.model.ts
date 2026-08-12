@@ -1,10 +1,9 @@
 import { Schema, model, Document } from "mongoose";
-import { UserRole } from "../types";
 
 export interface IUser extends Document {
   username: string;
   password: string;
-  role: UserRole;
+  role_id: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -19,11 +18,10 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: [true, "Please enter a password"],
   },
-  role:{
-    type: String,
-    enum: ["admin", "user"],
-    default: "user",
-  }
+  role_id: {
+    type: Number,
+    default: 2,
+  },
 });
 
 const User = model<IUser>("User", userSchema);

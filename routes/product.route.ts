@@ -7,6 +7,8 @@ import { requirePermission } from "../middleware/permission.middleware";
 
 const router = express.Router();
 
+router.use(authenticateToken);
+
 router.get(
   "/",
   requirePermission(["products:read", "products:all"]),
@@ -21,14 +23,12 @@ router.get(
 
 router.post(
   "/",
-  authenticateToken,
   requirePermission(["products:create", "products:all"]),
   asyncHandler(product.addProduct),
 );
 
 router.put(
   "/:id",
-  authenticateToken,
   requirePermission(["products:update", "products:all"]),
   asyncHandler(checkOwnership),
   asyncHandler(product.updateProduct),
@@ -36,7 +36,6 @@ router.put(
 
 router.delete(
   "/:id",
-  authenticateToken,
   requirePermission(["products:delete", "products:all"]),
   asyncHandler(checkOwnership),
   asyncHandler(product.deleteProduct),

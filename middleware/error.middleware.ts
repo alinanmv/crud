@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import logger from "../utils/logger";
 
 export const asyncHandler =
   (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
@@ -11,7 +12,7 @@ export function errorHandler(
   res: Response,
   next: NextFunction,
 ) {
-  console.error(err);
+  logger.error(`${req.method} ${req.originalUrl}`, err);
 
   if (err.code === 11000) {
     return res.status(409).json({ error: "Duplicate value" });

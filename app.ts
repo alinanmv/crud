@@ -8,8 +8,12 @@ import productRoutes from "./routes/product.route";
 import authRoutes from "./routes/auth.route";
 import { authenticateToken } from "./middleware/auth.middleware";
 import { errorHandler } from "./middleware/error.middleware";
+import logger from './utils/logger'
+
+logger.info(`App starting in ${process.env.NODE_ENV} mode`);
 
 const app = express();
+const port = Number(process.env.PORT) || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -23,8 +27,8 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
-  console.log(`App listening on port 3000`);
+app.listen(port, () => {
+  logger.info(`App listening on ` + port);
 });
 
 mongoose

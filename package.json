@@ -17,6 +17,7 @@
     "mongodb": "^7.5.0",
     "mongoose": "^9.9.1",
     "prettier": "^3.9.6",
+    "winston": "^3.19.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

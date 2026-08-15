@@ -34,10 +34,14 @@ const logger = winston.createLogger({
     }),
   ],
   exceptionHandlers: [
-    new winston.transports.File({ filename: path.join(logsDir, "exception.log") }),
+    new winston.transports.File({
+      filename: path.join(logsDir, "exception.log"),
+    }),
   ],
   rejectionHandlers: [
-    new winston.transports.File({ filename: path.join(logsDir, "rejection.log") }),
+    new winston.transports.File({
+      filename: path.join(logsDir, "rejection.log"),
+    }),
   ],
 });
 

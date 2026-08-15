@@ -2,7 +2,11 @@ import express from "express";
 import { login, refreshToken, logout } from "../controllers/auth.controller";
 import { addUser } from "../controllers/user.controller";
 import { validate } from "../middleware/validate.middleware";
-import { registerSchema, loginSchema, tokenSchema } from "../schemas/auth.schema";
+import {
+  registerSchema,
+  loginSchema,
+  tokenSchema,
+} from "../schemas/auth.schema";
 
 const router = express.Router();
 

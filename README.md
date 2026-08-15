@@ -6,6 +6,7 @@
 
 JWT authentication · Per-user data isolation · Centralized error handling
 
+[![CI pipeline](https://github.com/alinanmv/crud/actions/workflows/ci.yml/badge.svg)](https://github.com/alinanmv/crud/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Express](https://img.shields.io/badge/Express-5-000000?logo=express&logoColor=white)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)

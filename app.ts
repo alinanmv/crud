@@ -8,7 +8,7 @@ import productRoutes from "./routes/product.route";
 import authRoutes from "./routes/auth.route";
 import { errorHandler } from "./middleware/error.middleware";
 import { requestLogger } from "./middleware/request-logger.middleware";
-import logger from './utils/logger'
+import logger from "./utils/logger";
 
 logger.info(`App starting in ${process.env.NODE_ENV} mode`);
 

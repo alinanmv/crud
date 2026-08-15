@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
+import { AppError } from "../utils/app-error";
 
 let refreshTokens: string[] = [];
 
@@ -20,12 +21,12 @@ function generateAccessToken(payload: TokenPayload) {
 export const login = async (req: Request, res: Response) => {
   const user = await User.findOne({ username: req.body.username });
   if (user == null) {
-    return res.status(400).json({ error: "Cannot find user" });
+    throw new AppError(400, "Cannot find user");
   }
 
   const match = await bcrypt.compare(req.body.password, user.password);
   if (!match) {
-    return res.status(401).json({ error: "Wrong password" });
+    throw new AppError(401, "Wrong password");
   }
 
   const payload: TokenPayload = {

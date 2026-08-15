@@ -3,6 +3,7 @@ import { QueryFilter } from "mongoose";
 import { AuthRequest } from "../types";
 import Product, { IProduct } from "../models/product.model";
 import { isAdmin } from "../constants/roles";
+import { AppError } from "../utils/app-error";
 
 export const getProducts = async (req: AuthRequest, res: Response) => {
   const filter: QueryFilter<IProduct> = {};
@@ -22,7 +23,7 @@ export const getProduct = async (req: AuthRequest, res: Response) => {
   const product = await Product.findOne(filter);
 
   if (!product) {
-    return res.status(404).json({ error: "Product not found" });
+    throw new AppError(404, "Product not found");
   }
 
   res.status(200).json(product);
@@ -45,7 +46,7 @@ export const updateProduct = async (req: AuthRequest, res: Response) => {
   });
 
   if (!product) {
-    return res.status(404).json({ error: "Product not found" });
+    throw new AppError(404, "Product not found");
   }
 
   res.status(200).json(product);
@@ -56,7 +57,7 @@ export const deleteProduct = async (req: AuthRequest, res: Response) => {
   const product = await Product.findByIdAndDelete(id);
 
   if (!product) {
-    return res.status(404).json({ error: "Product not found" });
+    throw new AppError(404, "Product not found");
   }
 
   res.status(200).json({ message: "product deleted successfully" });

@@ -1,16 +1,17 @@
 import express from "express";
 import { login, refreshToken, logout } from "../controllers/auth.controller";
 import { addUser } from "../controllers/user.controller";
-import { asyncHandler } from "../middleware/error.middleware";
+import { validate } from "../middleware/validate.middleware";
+import { registerSchema, loginSchema, tokenSchema } from "../schemas/auth.schema";
 
 const router = express.Router();
 
-router.post("/register", asyncHandler(addUser));
+router.post("/register", validate(registerSchema), addUser);
 
-router.post("/login", asyncHandler(login));
+router.post("/login", validate(loginSchema), login);
 
-router.post("/token", refreshToken);
+router.post("/token", validate(tokenSchema), refreshToken);
 
-router.delete("/logout", logout);
+router.delete("/logout", validate(tokenSchema), logout);
 
 export default router;

@@ -1,11 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import logger from "../utils/logger";
 
-export const asyncHandler =
-  (fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) =>
-  (req: Request, res: Response, next: NextFunction) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
-
 export function errorHandler(
   err: any,
   req: Request,

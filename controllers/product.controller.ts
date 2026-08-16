@@ -32,6 +32,7 @@ export const getProduct = async (req: AuthRequest, res: Response) => {
 export const addProduct = async (req: AuthRequest, res: Response) => {
   const product = await Product.create({
     ...req.body,
+    image: req.file ? `/uploads/${req.file.filename}` : undefined,
     owner: req.user!.id,
     username: req.user!.username,
   });

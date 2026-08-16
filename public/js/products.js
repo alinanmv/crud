@@ -18,14 +18,19 @@ const form = document.getElementById("form");
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const name = document.getElementById("name").value;
-  const price = document.getElementById("price").value;
-  const quantity = document.getElementById("quantity").value;
+  const image = document.getElementById("image").files[0];
+
+  const formData = new FormData();
+  formData.append("name", document.getElementById("name").value);
+  formData.append("price", document.getElementById("price").value);
+  formData.append("quantity", document.getElementById("quantity").value);
+  if (image) {
+    formData.append("image", image);
+  }
 
   const response = await authFetch("/api/products", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, price, quantity }),
+    body: formData,
   });
 
   if (response.ok) {

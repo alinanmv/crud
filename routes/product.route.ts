@@ -1,4 +1,6 @@
 import express from "express";
+import multer from "multer";
+import path from "path";
 import * as product from "../controllers/product.controller";
 import { authenticateToken } from "../middleware/auth.middleware";
 import { checkOwnership } from "../middleware/owner.middleware";
@@ -10,6 +12,16 @@ import {
 } from "../schemas/product.schema";
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, unique + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 router.use(authenticateToken);
 
@@ -28,6 +40,7 @@ router.get(
 router.post(
   "/",
   requirePermission(["products:create", "products:all"]),
+  upload.single("image"),
   validate(createProductSchema),
   product.addProduct,
 );

@@ -19,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
 
 app.get("/register", (req, res) => {
   res.sendFile("register.html", { root: "public" });

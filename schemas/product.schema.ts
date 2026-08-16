@@ -4,7 +4,6 @@ export const createProductSchema = z.object({
   name: z.string().min(1),
   quantity: z.coerce.number().int().nonnegative().optional(),
   price: z.coerce.number().nonnegative().optional(),
-  image: z.string().url().optional(),
 });
 
 export const updateProductSchema = createProductSchema.partial();

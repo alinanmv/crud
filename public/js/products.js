@@ -13,19 +13,21 @@ async function init() {
 
 init();
 
+const pond = FilePond.create(document.getElementById("image"));
+
 const form = document.getElementById("form");
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const image = document.getElementById("image").files[0];
+  const file = pond.getFile();
 
   const formData = new FormData();
   formData.append("name", document.getElementById("name").value);
   formData.append("price", document.getElementById("price").value);
   formData.append("quantity", document.getElementById("quantity").value);
-  if (image) {
-    formData.append("image", image);
+  if (file) {
+    formData.append("image", file.file);
   }
 
   const response = await authFetch("/api/products", {

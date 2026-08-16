@@ -17,6 +17,12 @@ export function errorHandler(
     return res.status(400).json({ error: err.message });
   }
 
+  if (err.name === "MulterError") {
+    const message =
+      err.code === "LIMIT_FILE_SIZE" ? "File too large (max 2 MB)" : err.message;
+    return res.status(400).json({ error: message });
+  }
+
   res
     .status(err.status || 500)
     .json({ error: err.message || "Something went wrong" });

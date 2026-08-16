@@ -13,7 +13,19 @@ async function init() {
 
 init();
 
-const pond = FilePond.create(document.getElementById("image"));
+FilePond.registerPlugin(
+  FilePondPluginFileValidateSize,
+  FilePondPluginFileValidateType,
+);
+
+const pond = FilePond.create(document.getElementById("image"), {
+  acceptedFileTypes: ["image/*"],
+  maxFileSize: "2MB",
+  labelIdle:
+    'Drag & drop an image or <span class="filepond--label-action">Browse</span> (max 2 MB)',
+  labelMaxFileSizeExceeded: "File is too large",
+  labelMaxFileSize: "Maximum size is 2 MB",
+});
 
 const form = document.getElementById("form");
 

@@ -6,12 +6,15 @@ import { authenticateToken } from "../middleware/auth.middleware";
 import { checkOwnership } from "../middleware/owner.middleware";
 import { requirePermission } from "../middleware/permission.middleware";
 import { validate } from "../middleware/validate.middleware";
+import { AppError } from "../utils/app-error";
 import {
   createProductSchema,
   updateProductSchema,
 } from "../schemas/product.schema";
 
 const router = express.Router();
+
+export const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2 MB
 
 const storage = multer.diskStorage({
   destination: "uploads/",
@@ -21,7 +24,17 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: MAX_IMAGE_SIZE },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new AppError(400, "Only image files are allowed"));
+    }
+  },
+});
 
 router.use(authenticateToken);
 

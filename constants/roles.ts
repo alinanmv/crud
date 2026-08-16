@@ -19,7 +19,7 @@ export const ROLES: Role[] = [
     id: 2,
     name: "User",
     slug: "user",
-    permissions: ["products:read", "products:update"],
+    permissions: ["products:read", "products:create", "products:update"],
   },
 ];
 

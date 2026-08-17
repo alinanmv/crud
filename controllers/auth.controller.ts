@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/user.model";
 import bcrypt from "bcrypt";
+import { AppDataSource } from "../data-source";
+import { User } from "../entities/User";
 import { AppError } from "../utils/app-error";
+
+const userRepo = AppDataSource.getRepository(User);
 
 let refreshTokens: string[] = [];
 
 interface TokenPayload {
-  id: string;
+  id: number;
   username: string;
   role_id: number;
 }
@@ -19,7 +22,9 @@ function generateAccessToken(payload: TokenPayload) {
 }
 
 export const login = async (req: Request, res: Response) => {
-  const user = await User.findOne({ username: req.body.username });
+  const user = await userRepo.findOne({
+    where: { username: req.body.username },
+  });
   if (user == null) {
     throw new AppError(400, "Cannot find user");
   }
@@ -30,9 +35,9 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const payload: TokenPayload = {
-    id: user._id.toString(),
+    id: user.id,
     username: user.username,
-    role_id: user.role_id,
+    role_id: user.roleId,
   };
 
   const accessToken = generateAccessToken(payload);

@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config({ path: "./atlas-credentials.env" });
-dotenv.config({ path: "./.env" });
-
+import "./env";
 import express from "express";
-import mongoose from "mongoose";
+import "reflect-metadata";
+import { AppDataSource } from "./data-source";
 import productRoutes from "./routes/product.route";
 import authRoutes from "./routes/auth.route";
 import { errorHandler } from "./middleware/error.middleware";
@@ -32,15 +30,9 @@ app.use("/api/products", productRoutes);
 
 app.use(errorHandler);
 
-mongoose
-  .connect(process.env.MONGODB_URI as string)
+AppDataSource.initialize()
   .then(() => {
-    logger.info("MongoDB connected");
-    app.listen(port, () => {
-      logger.info(`App listening on port ${port}`);
-    });
+    logger.info("DB connected");
+    app.listen(port, () => logger.info(`Server listening on port ${port}`));
   })
-  .catch((err) => {
-    logger.error("MongoDB connection failed", err);
-    process.exit(1);
-  });
+  .catch((err) => logger.error("DB connection error:", err));

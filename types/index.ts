@@ -3,7 +3,7 @@ import { Request } from "express";
 export type UserRole = "admin" | "user";
 
 export interface JwtPayload {
-  id: string;
+  id: number;
   username: string;
   role_id: number;
 }

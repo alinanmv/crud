@@ -1,7 +1,10 @@
 import { Response, NextFunction } from "express";
 import { AuthRequest } from "../types";
-import Product from "../models/product.model";
+import { AppDataSource } from "../data-source";
+import { Product } from "../entities/Product";
 import { isAdmin } from "../constants/roles";
+
+const productRepo = AppDataSource.getRepository(Product);
 
 export async function checkOwnership(
   req: AuthRequest,
@@ -12,12 +15,14 @@ export async function checkOwnership(
     return next();
   }
 
-  const product = await Product.findById(req.params.id);
+  const product = await productRepo.findOne({
+    where: { id: Number(req.params.id) },
+  });
   if (!product) {
     return res.sendStatus(404);
   }
 
-  if (product.owner.toString() !== req.user?.id) {
+  if (product.ownerId !== req.user?.id) {
     return res.sendStatus(403);
   }
 

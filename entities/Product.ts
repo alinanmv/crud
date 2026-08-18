@@ -4,7 +4,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
+import { User } from "./User";
 
 @Entity("products")
 export class Product {
@@ -19,6 +22,10 @@ export class Product {
 
   @Column({ name: "owner_id", type: "int" })
   ownerId: number;
+
+  @ManyToOne(() => User, { onDelete: "CASCADE" })
+  @JoinColumn({ name: "owner_id" })
+  owner: User;
 
   @Column({ type: "int", default: 0 })
   quantity: number;

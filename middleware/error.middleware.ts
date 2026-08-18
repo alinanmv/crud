@@ -9,12 +9,8 @@ export function errorHandler(
 ) {
   logger.error(`${req.method} ${req.originalUrl}`, err);
 
-  if (err.code === 11000) {
+  if (err.code === "23505") {
     return res.status(409).json({ error: "Duplicate value" });
-  }
-
-  if (err.name === "ValidationError") {
-    return res.status(400).json({ error: err.message });
   }
 
   if (err.name === "MulterError") {
